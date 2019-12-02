@@ -10,11 +10,9 @@ import sys
 
 
 #TODO:Change user agent according to the versioning
-user_agent = "wallpysracpy bot v1.2 by u/NotCherub"
+user_agent = "wallpysracpy bot v1.4 by u/NotCherub"
 
 #Load Config from config.json
-#TODO: Check config file before moving forward
-#TODO: add option to upvote downloaded files
 config_keys = ['client_secret', 'client_id', 'destination', 'subreddits', 'upvote']
 with open('config.json') as config_file:
     try:
@@ -43,7 +41,10 @@ if not os.path.exists(config['destination']):
     os.mkdir(config['destination'])
 for subreddit in subreddits:
     for submission in reddit.subreddit(subreddit).hot(limit = 5):
-        #TODO:check if its an image or not
+        #TODO: Add config value for image size also
+        img_ext = submission.url.split(".")[-1]
+        if img_ext not in ['png', 'jpg', 'jpeg', 'gif', 'tif', 'bmp']:
+            continue
         if upvote:
             submission.upvote()
         img_url = submission.url
