@@ -10,7 +10,19 @@ import sys
 
 
 #TODO:Change user agent according to the versioning
-user_agent = "wallpysracpy bot v1.4 by u/NotCherub"
+user_agent = "wallpysracpy bot v1.test.4 by u/NotCherub"
+
+def check_dimension(title):
+    """
+    This function checks whether the dimension of the image is 16:9 or not.
+    """
+    title =  title.lower()
+    dim_str = title[title.find('[')+1:title.find(']')]
+    if dim_str == '' or dim_str is None:
+        return False
+    h, w = dim_str.split('x')
+    h, w = int(h), int(w)
+    return (h/w == 16/9)
 
 #Load Config from config.json
 config_keys = ['client_secret', 'client_id', 'destination', 'subreddits', 'upvote']
@@ -34,16 +46,15 @@ with open('config.json') as config_file:
         sys.exit(1)
 
 reddit = praw.Reddit(client_id = config['client_id'], client_secret = config['client_secret'], user_agent = user_agent, username = config['username'], password = config['password'])
-
+print(reddit.read_only)
 subreddits = ast.literal_eval(config['subreddits'])
 upvote = ast.literal_eval(config['upvote'])
 if not os.path.exists(config['destination']):
     os.mkdir(config['destination'])
 for subreddit in subreddits:
     for submission in reddit.subreddit(subreddit).hot(limit = 5):
-        #TODO: Add config value for image size also
         img_ext = submission.url.split(".")[-1]
-        if img_ext not in ['png', 'jpg', 'jpeg', 'gif', 'tif', 'bmp']:
+        if img_ext not in ['png', 'jpg', 'jpeg', 'gif', 'tif', 'bmp'] and check_dimension(submission.title):
             continue
         if upvote:
             submission.upvote()
@@ -54,4 +65,4 @@ for subreddit in subreddits:
         img_data = requests.get(img_url).content
         with open(img_path, 'wb') as handler:
             handler.write(img_data)
-        print("Downloaded File '{}' ".format(img_name))
+        print("Downloaded File: '{}' {}".format(img_name, submission.title))
