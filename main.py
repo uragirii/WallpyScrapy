@@ -46,7 +46,6 @@ with open('config.json') as config_file:
         sys.exit(1)
 
 reddit = praw.Reddit(client_id = config['client_id'], client_secret = config['client_secret'], user_agent = user_agent, username = config['username'], password = config['password'])
-print(reddit.read_only)
 subreddits = ast.literal_eval(config['subreddits'])
 upvote = ast.literal_eval(config['upvote'])
 if not os.path.exists(config['destination']):
