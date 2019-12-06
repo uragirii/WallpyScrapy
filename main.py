@@ -10,7 +10,7 @@ import sys
 
 
 #TODO:Change user agent according to the versioning
-user_agent = "wallpysracpy bot v1.test.4 by u/NotCherub"
+user_agent = "wallpysracpy bot v1.5 by u/NotCherub"
 
 def check_dimension(title):
     """
